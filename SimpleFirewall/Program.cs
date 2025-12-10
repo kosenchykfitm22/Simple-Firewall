@@ -18,28 +18,23 @@ namespace SimpleFirewall
         {
             Console.WriteLine("Initializing SimpleFirewall Service...");
 
-            // 1. Setup Components
             _logger = new SimpleLogger();
             _ruleEngine = new RuleEngine();
 
-            // 2. Load Rules
             var rules = ConfigManager.LoadRules();
             foreach (var rule in rules)
             {
                 _ruleEngine.AddRule(rule);
             }
 
-            // 3. Start API
             _api = new ManagementApi(_ruleEngine, _logger);
             _api.Start();
 
-            // 4. Start Default Proxy (8080 -> google.com:80 for demo)
             StartProxy(8080, "google.com", 80);
 
             Console.WriteLine("Service Ready.");
             Console.WriteLine("Type 'help' for commands.");
 
-            // 5. CLI Loop
             while (true)
             {
                 Console.Write("> ");
@@ -72,7 +67,7 @@ namespace SimpleFirewall
                         case "proxy":
                             if (parts.Length > 3) 
                             { 
-                                // proxy <localPort> <targetHost> <targetPort>
+
                                 if(int.TryParse(parts[1], out int lp) && int.TryParse(parts[3], out int tp))
                                      StartProxy(lp, parts[2], tp);
                             }
@@ -107,7 +102,6 @@ namespace SimpleFirewall
 
         static void AddRule(string[] parts)
         {
-            // add <src_ip> <port> <proto> <action> [prio]
             if (parts.Length < 5)
             {
                 Console.WriteLine("Usage: add <src_ip> <port> <tcp/udp/any> <allow/deny> [priority]");
