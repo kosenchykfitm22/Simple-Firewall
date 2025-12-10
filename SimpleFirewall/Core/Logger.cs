@@ -31,15 +31,12 @@ namespace SimpleFirewall.Core
 
             lock (_lock)
             {
-                // In a real high-throughput scenario, we'd use a background queue.
-                // For this user-mode simulation, direct append is fine.
                 File.AppendAllText(_logFilePath, jsonLine + Environment.NewLine);
             }
         }
         
         public void LogSystem(string message)
         {
-             // Simple console logging for system events
              Console.WriteLine($"[SYSTEM] {message}");
         }
     }
