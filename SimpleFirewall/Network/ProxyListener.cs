@@ -79,13 +79,12 @@ namespace SimpleFirewall.Network
                 {
                     SourceIP = remoteIp,
                     SourcePort = remotePort,
-                    DestinationIP = "127.0.0.1", // Simplified for localhost listener
+                    DestinationIP = "127.0.0.1", 
                     DestinationPort = localPort,
                     Protocol = Core.ProtocolType.TCP,
                     Timestamp = DateTime.Now
                 };
 
-                // Check Rules
                 string matchedRuleId;
                 var action = _ruleEngine.CheckPacket(packetInfo, out matchedRuleId);
 
@@ -99,11 +98,9 @@ namespace SimpleFirewall.Network
 
                 Console.WriteLine($"[ALLOWED] {remoteIp}:{remotePort} -> {localPort} (Rule: {matchedRuleId ?? "Default"}) -> Forwarding to {_config.TargetHost}:{_config.TargetPort}");
 
-                // Connect to Target
                 targetClient = new TcpClient();
                 await targetClient.ConnectAsync(_config.TargetHost, _config.TargetPort);
 
-                // Pipe Streams
                 var clientStream = client.GetStream();
                 var targetStream = targetClient.GetStream();
 
